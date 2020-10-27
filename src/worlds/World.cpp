@@ -1,4 +1,8 @@
-#include "World.h"
+#include "../../src/worlds/World.h"
+
+#include "../../src/constants/Constants.h"
+#include "../../src/data/ResourceManager.h"
+
 
 World::World()
 {
@@ -10,9 +14,17 @@ World::~World()
 
 }
 
-void World::generateMap(const std::string& id)
+void World::generateMap(sf::Texture* tileSpriteSheet, const std::string& level)
 {
-	//char* path = ("../../src/maps/" + id + ".txt");
-	//cmap.Create(path, id);
-	//tilemap.load(textures[0], cmap);
+	std::string path = WORLD_FILE_ADDRESS + level + ".txt";
+
+	this->tileset = tileSpriteSheet;
+
+	this->cmap.create(path, level);
+	this->tilemap.load(this->tileset, this->cmap);
+}
+
+void World::render(sf::RenderWindow* window)
+{
+	window->draw(tilemap);
 }

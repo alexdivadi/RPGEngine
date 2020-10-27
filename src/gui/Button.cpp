@@ -53,32 +53,32 @@ void Button::centerText()
 	);
 }
 
+bool Button::isPressed()
+{
+	return pressed;
+}
+
 void Button::update(const sf::Vector2f mousePos)
 {
 	//updates bool for hover and pressed
+
 	
 	// idle
 	this->state = IDLE;
+	hover = false;
+	pressed = false;
 
 	//hover
 	if (this->shape.getGlobalBounds().contains(mousePos))
 	{
 		this->state = HOVER;
+		hover = true;
 
 		// press
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			this->state = PRESSED;
-
-			// get some function pointers in here, like for start we're defenitly gonna need a function pointer for 
-			if (text.getString() == "Start")
-				std::cout << "Start button pressed";
-			else if (text.getString() == "Options")
-				std::cout << "Options button pressed";
-			else if (text.getString() == "Quit")
-				std::cout << "Quit button pressed";
-			else
-				std::cout << "Dont know what to do for that button press";
+			pressed = true;
 		}
 	}
 

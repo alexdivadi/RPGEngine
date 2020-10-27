@@ -26,8 +26,8 @@ void MainMenuState::init()
 	testText.setString("Grok");
 	testText.setPosition(100, 100);
 
-	testButtonSet.init(WINDOW_WIDTH / 10.f, (WINDOW_HEIGHT / 2.f), 200, 200, 3, "Start/Options/Quit", *testFont, 30);
-
+	testButtonSet.init(WINDOW_WIDTH / 10.f, (WINDOW_HEIGHT / 2.f), 200, 200, 3, "startButton-Start/optionsButton-Options/quitButton-Quit/", *testFont, 30);
+	
 	testButtonSet.setColors(sf::Color::White, sf::Color::Black, sf::Color(100, 100, 100), sf::Color(50, 50, 50));
 
 	sf::Texture* testTexture{ data->assets.loadTexture("default", "") };
@@ -58,6 +58,12 @@ void MainMenuState::handleInput()
 {
 	sf::Event event;
 
+	if (testButtonSet.buttons.at("startButton").isPressed())
+	{
+		std::cout << "menu calling addState type play" << std::endl;
+		data->stateMachine.addState(new PlayState(data, window), true);
+	}
+
 	while (window->pollEvent(event))
 	{
 		switch (event.type)
@@ -67,11 +73,7 @@ void MainMenuState::handleInput()
 			break;
 
 		case sf::Event::KeyPressed:
-			if (event.key.code == sf::Keyboard::E)
-			{
-				std::cout << "menu calling addState type play" << std::endl;
-				data->stateMachine.addState(new PlayState(data, window), true);
-			}
+			//if (event.key.code == sf::Keyboard::E)
 			break;
 		}
 	}

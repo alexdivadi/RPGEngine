@@ -2,28 +2,30 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <fstream>
 #include <stdio.h>
 #include <string>
-#include <fstream>
+#include <vector>
 
 class Map
 {
 private:
-	int* m_indicies;
-	bool* m_solids;
+	//int* m_indicies; 
+	std::vector<int> m_indicies;
+	//bool* m_solids; 
+	std::vector<bool> m_solids;
 
 public:
 	int nWidth;
 	int nHeight;
 	std::string sName;
-	sf::Sprite* pSprite;
 
 public:
 	Map();
 	~Map();
 
-	int GetIndex(int x, int y);
-	bool GetSolid(int x, int y);
+	int getIndex(int x, int y);
+	bool getSolid(int x, int y);
 
 	/*
 	Name: Create
@@ -31,5 +33,5 @@ public:
 	Input: string literal Filename, string literal level_name
 	Returns: bool succesful?
 	*/
-	bool Create(const std::string& fileName, const std::string& name, sf::Sprite* sprite);
+	bool create(const std::string& fileName, const std::string& name);
 };

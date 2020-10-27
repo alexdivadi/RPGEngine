@@ -1,8 +1,6 @@
 #include "../../src/states/PlayState.h"
 
-#include "../../src/states/BattleState.h"
-#include "../../src/constants/Constants.h"
-#include "../../src/data/GameData.h"
+
 
 #include <iostream>
 
@@ -33,10 +31,17 @@ void PlayState::init()
 
 	testSprite.setTexture(*testTexture);
 	testSprite.setScale(sf::Vector2f(
-		WINDOW_WIDTH / testSprite.getGlobalBounds().width, 
+		WINDOW_WIDTH / testSprite.getGlobalBounds().width,
 		WINDOW_HEIGHT / testSprite.getGlobalBounds().height
 	));
 	testSprite.setPosition(sf::Vector2f(0.f, 0.f));
+
+
+	testButtonSet.init(WINDOW_WIDTH * 7.f / 10.f, (WINDOW_HEIGHT / 2.f), 200, 200, 3, "something-blah/", *testFont, 30);
+
+	testButtonSet.setColors(sf::Color::White, sf::Color::Black, sf::Color(100, 100, 100), sf::Color(50, 50, 50));
+
+
 
 	data->assets.addSong("HardRain", "Mother 3 - 036 Hard Rain.ogg", stateName);
 
@@ -44,6 +49,18 @@ void PlayState::init()
 	testMusic->setLoop(true);
 
 	testMusic->play();
+
+	/*
+		actual game init
+		World w("tiles", "ranch");
+
+
+	*/
+	data->assets.addTexture("PlayerSprite", "chara_01.jpg", stateName);
+	player.initSprite(data->assets.loadTexture("PlayerSprite", stateName));
+
+	data->assets.addTexture("Tileset", "tiles.png", stateName);
+	world.generateMap(data->assets.loadTexture("Tileset", stateName), "O-1");
 
 }
 
@@ -74,25 +91,41 @@ void PlayState::handleInput()
 				std::cout << "play calling addState type menu\n" << std::endl;
 				data->stateMachine.addState(new BattleState(data, window), true);
 			}
-			break;
+
+			if (event.key.code == sf::Keyboard::W) { player.yVel = -1 * player.speed; break; }	// player.moveUp	//player.move(0,1)
+			if (event.key.code == sf::Keyboard::A) { player.xVel = -1 * player.speed; break; }
+			if (event.key.code == sf::Keyboard::S) { player.yVel = 1 * player.speed; break; }
+			if (event.key.code == sf::Keyboard::D) { player.xVel = 1 * player.speed; break; }
+
 		}
 	}
 
 	//std::cout << "play input" << std::endl;
 }
 
-void PlayState::update()
+void PlayState::update(/* float dt */)
 {
 	//std::cout << sf::Mouse::getPosition().x << "  " << sf::Mouse::getPosition().y << std::endl;
-	//std::cout << "play update" << std::endl;
+
+	for (auto& e : world.entities)
+		e->update(1.f / 60.f);	// 0.1f/60.f is temp dt
+
 	testButtonSet.update(*window);
+
+	//std::cout << "play update" << std::endl;
 }
 
 void PlayState::draw()
 {
 	window->draw(testSprite);
 	window->draw(testText);
-	//testButtonSet.render(*window);
+
+	world.render(window);
+
+	for (auto& e : world.entities)
+		e->render(*window);
+
+	testButtonSet.render(*window);
 
 	//std::cout << "play draw" << std::endl;
 }

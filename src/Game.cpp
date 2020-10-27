@@ -9,7 +9,7 @@ Game::Game()
 {
 	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Window", sf::Style::Default);
 
-	window.setFramerateLimit(60);
+	//window.setFramerateLimit(60);
 
 	// Puts first gamestate into play
 	gameData.stateMachine.addState(new MainMenuState(&gameData, &window), false);
@@ -35,7 +35,7 @@ void Game::gameLoop()
 		//From Zelda VVV
 		elapsedTime = clock.restart();
 
-		//sf::Time elapsed = clock.restart();
+		//elapsedTime = clock.restart();
 		//float dt = elapsed.asMilliseconds();
 
 		gameData.stateMachine.processStateChange();
@@ -49,7 +49,7 @@ void Game::gameLoop()
 		}
 
 		gameData.stateMachine.currentState()->handleInput();
-		gameData.stateMachine.currentState()->update();
+		gameData.stateMachine.currentState()->update(/* float dt */);
 
 		window.clear(sf::Color::Black);
 
